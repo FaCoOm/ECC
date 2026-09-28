@@ -164,6 +164,8 @@ Access to 68 agents, 292 skills, and 94 legacy command shims, plus hooks, rules,
 > ECC 2.2 includes guided package setup for Claude Code, Codex, and Kimi Code.
 > The universal package requires Node.js 18 or newer. Claude plugin setup also
 > requires Git and Claude Code 2.1 or newer on `PATH`.
+>
+> For installing ECC directly from this repository/fork into a designated project across Claude Code, Antigravity, Kiro, Cursor, Gemini, and others, see the [Project Installation & Deployment Guide](docs/PROJECT-INSTALLATION-GUIDE.md).
 
 ### Recommended: universal guided setup
 
