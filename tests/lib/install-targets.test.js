@@ -481,7 +481,7 @@ function runTests() {
     );
   })) passed++; else failed++;
 
-  if (test('plans native Antigravity 2.0 rules, workflows, skills, and agents', () => {
+  if (test('plans native Antigravity 2.0 rules, command skills, skills, and agents', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const projectRoot = '/workspace/app';
 
@@ -511,10 +511,15 @@ function runTests() {
 
     assert.ok(
       plan.operations.some(operation => (
-        operation.sourceRelativePath === 'commands'
-        && operation.destinationPath === path.join(projectRoot, '.agents', 'workflows')
+        normalizedRelativePath(operation.sourceRelativePath) === 'commands/plan.md'
+        && operation.destinationPath === path.join(projectRoot, '.agents', 'skills', 'plan', 'SKILL.md')
+        && operation.contentTransform === 'antigravity-command-frontmatter'
       )),
-      'Should remap commands into workflows'
+      'Should remap commands into skills with frontmatter transform'
+    );
+    assert.ok(
+      plan.operations.every(operation => !operation.destinationPath.includes(path.join('.agents', 'workflows'))),
+      'Should not emit any operations into deprecated workflows'
     );
     assert.ok(
       plan.operations.some(operation => (

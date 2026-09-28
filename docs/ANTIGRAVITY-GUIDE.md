@@ -1,7 +1,7 @@
 # Antigravity Setup and Usage Guide
 
 Google Antigravity 2.0 discovers workspace customizations from the project-local
-`.agents/` directory. ECC's Antigravity target installs native rules, workflows,
+`.agents/` directory. ECC's Antigravity target installs native rules, command skills,
 skills, and custom agents into that directory.
 
 Native Antigravity 2.0 installation requires ECC 2.2.0 or newer. ECC 2.1.0 uses
@@ -49,7 +49,7 @@ updated skill inventory.
 | ECC source | Antigravity destination | Purpose |
 |---|---|---|
 | `rules/` | `.agents/rules/` | Workspace rules, flattened with collision-safe names |
-| `commands/` | `.agents/workflows/` | User-invoked slash workflows |
+| `commands/` | `.agents/skills/<name>/SKILL.md` | User-invoked slash commands (`disable-model-invocation: true`) |
 | `skills/<name>/` | `.agents/skills/<name>/` | Agent Skills with a required `SKILL.md` |
 | `agents/<name>.md` | `.agents/agents/<name>.md` | Custom main agents and subagents |
 
@@ -70,9 +70,9 @@ your-project/
     ├── rules/
     │   ├── common-coding-style.md
     │   └── typescript-testing.md
-    ├── workflows/
-    │   └── plan.md
     ├── skills/
+    │   ├── plan/
+    │   │   └── SKILL.md
     │   └── coding-standards/
     │       └── SKILL.md
     ├── agents/
@@ -145,10 +145,11 @@ node "$EccRoot\scripts\uninstall.js" --target antigravity --dry-run
 - Confirm the files are directly under `.agents/rules/`.
 - Run doctor and inspect any missing or drifted managed-file warning.
 
-### Workflows do not appear
+### Commands do not appear
 
-- Confirm the files are under `.agents/workflows/`.
-- Invoke a workflow with `/<workflow-name>` after restarting Antigravity.
+- Confirm the command skill is installed under `.agents/skills/<command-name>/SKILL.md`.
+- Verify the frontmatter contains `disable-model-invocation: true`.
+- Invoke the command with `/<command-name>` after restarting Antigravity.
 
 ## Official Antigravity references
 

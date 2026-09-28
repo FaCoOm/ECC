@@ -55,7 +55,7 @@ node <ECC_REPO_DIR>/scripts/install-apply.js --target claude-project --profile f
 
 ### B. Antigravity
 
-Antigravity uses project-level agents, workflows, rules, and skills placed into `<PROJECT_DIR>/.agents/`.
+Antigravity uses project-level agents, command skills, rules, and skills placed into `<PROJECT_DIR>/.agents/`.
 
 #### From Windows (PowerShell):
 ```pwsh

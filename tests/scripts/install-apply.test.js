@@ -316,7 +316,12 @@ function runTests() {
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'rules', 'common-coding-style.md')));
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'rules', 'typescript-testing.md')));
       assert.ok(!fs.existsSync(path.join(projectDir, '.agents', 'rules', 'python-testing.md')));
-      assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'workflows', 'plan.md')));
+      assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'skills', 'plan', 'SKILL.md')));
+      assert.ok(!fs.existsSync(path.join(projectDir, '.agents', 'workflows')));
+      const planSkill = readMarkdownFrontmatter(
+        path.join(projectDir, '.agents', 'skills', 'plan', 'SKILL.md')
+      );
+      assert.strictEqual(planSkill['disable-model-invocation'], true);
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'skills', 'tdd-workflow', 'SKILL.md')));
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'agents', 'architect.md')));
       const tddGuide = readMarkdownFrontmatter(
@@ -354,7 +359,7 @@ function runTests() {
       );
       assert.ok(
         state.operations.some(operation => (
-          operation.destinationPath.endsWith(path.join('.agents', 'workflows', 'plan.md'))
+          operation.destinationPath.endsWith(path.join('.agents', 'skills', 'plan', 'SKILL.md'))
         )),
         'Should record manifest command file copy operation'
       );
@@ -900,7 +905,12 @@ function runTests() {
         'Manifest profiles should retain broad rule coverage'
       );
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'agents', 'architect.md')));
-      assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'workflows', 'plan.md')));
+      assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'skills', 'plan', 'SKILL.md')));
+      assert.ok(!fs.existsSync(path.join(projectDir, '.agents', 'workflows')));
+      const planSkill = readMarkdownFrontmatter(
+        path.join(projectDir, '.agents', 'skills', 'plan', 'SKILL.md')
+      );
+      assert.strictEqual(planSkill['disable-model-invocation'], true);
       assert.ok(fs.existsSync(path.join(projectDir, '.agents', 'skills', 'tdd-workflow', 'SKILL.md')));
 
       const state = readJson(path.join(projectDir, '.agents', 'ecc-install-state.json'));

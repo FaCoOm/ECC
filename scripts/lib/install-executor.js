@@ -420,7 +420,19 @@ function planAntigravityLegacyInstall(context) {
     moduleId: 'legacy-antigravity-install',
     sourceRoot: context.sourceRoot,
     sourceRelativeDir: 'commands',
-    destinationDir: path.join(targetRoot, 'workflows')
+    destinationDir: path.join(targetRoot, 'skills'),
+    destinationRelativePathTransform: relativeFile => {
+      if (!relativeFile.endsWith('.md')) {
+        return null;
+      }
+      const commandName = path.basename(relativeFile, '.md');
+      const canonicalSkillPath = path.join(context.sourceRoot, 'skills', commandName, 'SKILL.md');
+      if (fs.existsSync(canonicalSkillPath)) {
+        return null;
+      }
+      return path.join(commandName, 'SKILL.md');
+    },
+    contentTransform: 'antigravity-command-frontmatter'
   });
   addRecursiveCopyOperations(operations, {
     moduleId: 'legacy-antigravity-install',
