@@ -1,6 +1,7 @@
 'use strict';
 
-const { execFile: nodeExecFile } = require('child_process');
+const { execFile: nodeExecFile, spawnSync } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 const { normalizeGitHubGitOrigin } = require('./github-origin');
 
@@ -159,6 +160,31 @@ function isCommandTimeout(error, killSignal = 'SIGKILL') {
     || (error?.killed === true && error?.signal === killSignal);
 }
 
+function resolveWindowsCmdShim(command, env) {
+  if (typeof command !== 'string' || command.length === 0) return null;
+  if (/\.(cmd|bat)$/i.test(command)) return command;
+  if (path.extname(command)) return null;
+
+  const isPathLike = path.isAbsolute(command)
+    || command.includes('/')
+    || command.includes('\\');
+  if (isPathLike) {
+    const candidate = `${command}.cmd`;
+    return fs.existsSync(candidate) ? candidate : null;
+  }
+
+  const lookup = spawnSync('where.exe', [`${command}.cmd`], {
+    env,
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+  if (lookup.error || lookup.status !== 0) return null;
+  return String(lookup.stdout || '')
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .find(Boolean) || null;
+}
+
 async function runCodexCommand(args, options = {}, dependencies = {}) {
   const command = dependencies.command || options.command || 'codex';
   const execFile = dependencies.execFile || nodeExecFile;
@@ -166,16 +192,44 @@ async function runCodexCommand(args, options = {}, dependencies = {}) {
   const timeoutMs = options.timeoutMs ?? PROVIDER_COMMAND_TIMEOUT_MS;
   const killSignal = 'SIGKILL';
   try {
-    return await executeFile(execFile, command, argv, {
-      cwd: options.cwd || process.cwd(),
-      encoding: 'utf8',
-      env: options.env || process.env,
-      maxBuffer: MAX_OUTPUT_BYTES,
-      killSignal,
-      shell: false,
-      timeout: timeoutMs,
-      windowsHide: true,
-    });
+    try {
+      return await executeFile(execFile, command, argv, {
+        cwd: options.cwd || process.cwd(),
+        encoding: 'utf8',
+        env: options.env || process.env,
+        maxBuffer: MAX_OUTPUT_BYTES,
+        killSignal,
+        shell: false,
+        timeout: timeoutMs,
+        windowsHide: true,
+      });
+    } catch (initialError) {
+      if (
+        process.platform === 'win32'
+        && !dependencies.execFile
+        && (initialError?.code === 'ENOENT' || initialError?.code === 'EINVAL')
+      ) {
+        const shim = resolveWindowsCmdShim(command, options.env || process.env);
+        if (shim) {
+          return await executeFile(
+            execFile,
+            process.env.ComSpec || 'cmd.exe',
+            ['/d', '/s', '/c', shim, ...argv],
+            {
+              cwd: options.cwd || process.cwd(),
+              encoding: 'utf8',
+              env: options.env || process.env,
+              maxBuffer: MAX_OUTPUT_BYTES,
+              killSignal,
+              shell: false,
+              timeout: timeoutMs,
+              windowsHide: true,
+            }
+          );
+        }
+      }
+      throw initialError;
+    }
   } catch (error) {
     if (isCommandTimeout(error, killSignal)) {
       fail(
@@ -474,5 +528,6 @@ module.exports = {
   parsePluginInventory,
   reconcileCodexPlugin,
   resolveMarketplaceRepository,
+  resolveWindowsCmdShim,
   runCodexCommand,
 };

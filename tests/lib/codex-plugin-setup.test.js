@@ -12,6 +12,7 @@ const {
   parsePluginInventory,
   reconcileCodexPlugin,
   resolveMarketplaceRepository,
+  resolveWindowsCmdShim,
 } = require('../../scripts/lib/codex-plugin-setup');
 
 const MARKETPLACE_LIST = ['plugin', 'marketplace', 'list', '--json'];
@@ -611,6 +612,13 @@ async function runTests() {
         /verify.*ecc marketplace/i
       );
       assert.strictEqual(fake.calls.length, 4);
+    }],
+    ['resolves Windows command shims correctly or returns null for non-shims', async () => {
+      assert.strictEqual(resolveWindowsCmdShim('', {}), null);
+      assert.strictEqual(resolveWindowsCmdShim('codex.cmd', {}), 'codex.cmd');
+      assert.strictEqual(resolveWindowsCmdShim('codex.bat', {}), 'codex.bat');
+      assert.strictEqual(resolveWindowsCmdShim('codex.exe', {}), null);
+      assert.strictEqual(resolveWindowsCmdShim('nonexistent-binary-12345', {}), null);
     }],
   ];
 

@@ -27,9 +27,8 @@ notify = [
   "-sound", "default",
 ]
 
-# Persistent instructions are appended to every prompt (additive, unlike
-# model_instructions_file which replaces AGENTS.md).
-persistent_instructions = "Follow project AGENTS.md guidelines. Use available MCP servers when they can help."
+# Developer instructions are inserted as a developer role message in prompts.
+developer_instructions = "Follow project AGENTS.md guidelines. Use available MCP servers when they can help."
 
 # model_instructions_file replaces built-in instructions instead of AGENTS.md,
 # so leave it unset unless you intentionally want a single override file.
@@ -120,3 +119,7 @@ config_file = "agents/reviewer.toml"
 [agents.docs_researcher]
 description = "Documentation specialist that verifies APIs, framework behavior, and release notes."
 config_file = "agents/docs-researcher.toml"
+
+[skills]
+# Ensure sufficient token headroom for the comprehensive ECC skills catalog
+max_context_tokens = 10000

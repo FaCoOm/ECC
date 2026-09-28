@@ -23,7 +23,7 @@ try {
   process.exit(1);
 }
 
-const ROOT_KEYS = ['approval_policy', 'sandbox_mode', 'web_search', 'notify', 'persistent_instructions'];
+const ROOT_KEYS = ['approval_policy', 'sandbox_mode', 'web_search', 'notify', 'developer_instructions', 'persistent_instructions'];
 const TABLE_PATHS = [
   'features',
   'profiles.strict',
@@ -32,6 +32,7 @@ const TABLE_PATHS = [
   'agents.explorer',
   'agents.reviewer',
   'agents.docs_researcher',
+  'skills',
 ];
 const TOML_HEADER_RE = /^[ \t]*(?:\[[^[\]\n][^\]\n]*\]|\[\[[^[\]\n][^\]\n]*\]\])[ \t]*(?:#.*)?$/m;
 
