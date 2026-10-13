@@ -13,8 +13,10 @@ const TOOL_NAMES = Object.freeze({
 
 const MODEL_NAMES = Object.freeze({
   haiku: 'flash',
-  sonnet: 'pro',
-  opus: 'pro',
+  sonnet: 'flash',
+  opus: 'flash',
+  pro: 'flash',
+  flash: 'flash',
 });
 
 function splitFrontmatter(source, label) {
@@ -55,7 +57,9 @@ function adaptAntigravityAgent(source, label = '<unknown>') {
   if (Object.hasOwn(frontmatter, 'model')) {
     adapted.model = Object.hasOwn(MODEL_NAMES, frontmatter.model)
       ? MODEL_NAMES[frontmatter.model]
-      : frontmatter.model;
+      : 'flash';
+  } else {
+    adapted.model = 'flash';
   }
   const serialized = require('js-yaml')
     .dump(adapted, { lineWidth: -1, noRefs: true })
