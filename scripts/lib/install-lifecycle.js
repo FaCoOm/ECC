@@ -35,7 +35,6 @@ const {
   repairManagedHooks,
   uninstallManagedHooks,
   updateSettingsAtomic,
-  validateManagedHooks,
 } = require('./install/claude-settings');
 const { transformInstallContent } = require('./install/content-transform');
 const { buildInstallIndex, rewriteRelativeLinks } = require('./install/link-rewrite');
@@ -251,7 +250,6 @@ function buildLinkIndexForOperations(operations, trustedRoot) {
     }));
   return buildInstallIndex(mappings);
 }
-
 
 function getExpectedCopyFileContent(operation, content, linkIndex) {
   const transformed = transformInstallContent(operation, content);

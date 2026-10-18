@@ -36,7 +36,6 @@ notify = [
 developer_instructions = "Follow project AGENTS.md guidelines. Use available MCP servers when they can help."
 persistent_instructions = "Follow project AGENTS.md guidelines. Use available MCP servers when they can help."
 
-
 [features]
 multi_agent = true
 
