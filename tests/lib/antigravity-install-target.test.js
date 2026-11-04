@@ -76,7 +76,7 @@ test('transform maps Claude tools (including MultiEdit/ReadFile/NotebookRead), m
 
   assert.strictEqual(parsed.name, 'code-simplifier');
   assert.strictEqual(parsed.description, 'Refactoring and simplification specialist.');
-  assert.strictEqual(parsed.model, 'pro');
+  assert.strictEqual(parsed.model, 'flash');
   assert.strictEqual(Object.hasOwn(parsed, 'color'), false);
   assert.deepStrictEqual(parsed.tools, [
     'view_file',

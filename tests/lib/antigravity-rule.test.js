@@ -55,7 +55,9 @@ function runTests() {
     const adapted = adaptAntigravityRule(source, 'rules/python/coding-style.md');
 
     assert.deepStrictEqual(frontmatterOf(adapted), { trigger: 'glob', globs: '**/*.py,**/*.pyi' });
-    assert.ok(adapted.endsWith(source.slice(source.indexOf('\n---\n', 3) + '\n---\n'.length)));
+    const fenceMatch = source.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/);
+    assert.ok(fenceMatch, 'Expected frontmatter fence');
+    assert.ok(adapted.endsWith(source.slice(fenceMatch[0].length)));
   })) passed++; else failed++;
 
   if (test('accepts a single string path and CRLF line endings', () => {

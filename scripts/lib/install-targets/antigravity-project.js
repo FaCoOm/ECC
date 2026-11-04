@@ -126,7 +126,6 @@ function withAntigravityRuleTrigger(operation) {
     ? { ...operation, contentTransform: 'antigravity-rule-frontmatter' }
     : operation;
 }
-}
 
 module.exports = createInstallTargetAdapter({
   id: 'antigravity-project',
